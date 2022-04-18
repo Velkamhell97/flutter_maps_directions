@@ -36,7 +36,7 @@ class PlacesProvider extends ChangeNotifier {
         placesB = placesB.dataState(response.suggestions, response.query.join(' '));
       }
     } catch (e) {
-      print('error: $e');
+      print('Error: ${e.toString()}');
       if(marker == 'A'){
         placesA = placesA.errorState('Error: ${e.toString()}');
       } else {
