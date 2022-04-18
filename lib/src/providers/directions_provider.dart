@@ -27,6 +27,7 @@ class DirectionsProvider extends ChangeNotifier {
       final response = await _api.getDirections(pointA, pointB);
       directions = directions.dataState(response.routes[0]);
     } catch (e) {
+      print('Error: ${e.toString()}');
       directions = directions.errorState('Error: ${e.toString()}');
     }
   }

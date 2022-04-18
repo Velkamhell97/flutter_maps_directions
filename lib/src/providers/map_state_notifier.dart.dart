@@ -14,7 +14,7 @@ class MapStateNotifier extends StateNotifier<MapState> {
   MapStateNotifier() : super(const MapState());
 
   late final GoogleMapController _mapController;
-  
+
   late final BitmapDescriptor iconI;
   late final Uint8List iconA;
   late final Uint8List iconB;
@@ -24,7 +24,6 @@ class MapStateNotifier extends StateNotifier<MapState> {
   static const _boundsPadding = 50.0;
 
   bool _unknowPosition = false;
-  bool tracking = false;
 
   Future<void> loadResources() async {
     /// Forma de obtenerlo como imagen, al parecer el tamaño lo define el tamaño de la imagen

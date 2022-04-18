@@ -124,6 +124,7 @@ class _SearchLayerState extends State<SearchLayer> {
   Future<void> _onSelectSuggestion(Suggestion suggestion, String marker) async {
     _selected = suggestion.placeName;
     
+    
     search.updateTextController(suggestion.placeName, marker);
     context.read<MapStateNotifier>().addMarker(suggestion.latlng, marker);
     
@@ -132,12 +133,23 @@ class _SearchLayerState extends State<SearchLayer> {
     final map = context.read<MapState>();
     
     if(map.canRoute){
+      /// Si se hace con el focusScope se causa un rebuild de toda la pagina y vuelve a mostrar el overlay
+      /// Tambien se podria pasar el valueNotifier del search para ocultarlo al buscar
+      (marker == 'A' ? _focusNodeA.unfocus() : _focusNodeB.unfocus());
       context.read<DirectionsProvider>().getDirections(map.markerA, map.markerB);
     }
   }
 
   void _clear(String marker){
-    (marker == 'A' ? _debouncerA.cancel() : _debouncerB.cancel());
+    if(marker == 'A'){
+      _debouncerA.cancel();
+      _focusNodeA.requestFocus();
+    } else {
+      _debouncerB.cancel();
+      _focusNodeB.requestFocus();
+    }
+
+    _selected = '';
     search.clearTextController(marker);
     placesProvider.clearQuery(marker);
     map.removeMarker(marker);
@@ -182,10 +194,14 @@ class _SearchLayerState extends State<SearchLayer> {
                       ),
                       onChanged: (query) {
                         if(query.isEmpty) return _clear('A');
-                        if(query == _selected) return; ///Por el rebuild del onSelect
+                        if(query.equals(_selected)) return; ///Por el rebuild del onSelect
 
                         placesProvider.placesA = placesProvider.placesA.fetchingState();
-                        _debouncerA.run(() async => await placesProvider.getSuggestions(query, 'A'));
+                        _debouncerA.run(() async {
+                          _selected = query;
+                          final myLocation = context.read<MapState>().markerI;
+                          await placesProvider.getSuggestions(query, 'A', myLocation);
+                        });
                       },
                     );
                   },
@@ -231,7 +247,11 @@ class _SearchLayerState extends State<SearchLayer> {
                         if(query == _selected) return; ///Por el rebuild del onSelect
 
                         placesProvider.placesB = placesProvider.placesB.fetchingState();
-                        _debouncerB.run(() async => await placesProvider.getSuggestions(query, 'B'));
+                        _debouncerB.run(() async {
+                          _selected = query;
+                          final myLocation = context.read<MapState>().markerI;
+                          await placesProvider.getSuggestions(query, 'B', myLocation);
+                        });
                       },
                     );
                   },

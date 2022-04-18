@@ -30,6 +30,7 @@ class PermissionsProvider extends ChangeNotifier {
       permissions = await Geolocator.requestPermission();
 
       if(permissions == LocationPermission.deniedForever){
+        /// A pesar que no es buena practica mezclar UI con servicios este es un unico caso y no habria problema
         await NotificationsService.showPermissionsServicesDialog();
         Geolocator.openAppSettings();
       }

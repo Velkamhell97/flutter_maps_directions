@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 
+
+
 /// Aqui tampoco es necesario manejar un estado unicamente se escuchan los cambios de una variable, podria utilizarse
 /// otro provider como ValueListenable pero como hay logica dentro de la clase se deja el ChangeNotifier
 class LocationProvider extends ChangeNotifier {

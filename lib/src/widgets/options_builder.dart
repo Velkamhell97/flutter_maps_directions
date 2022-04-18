@@ -36,7 +36,10 @@ class OptionsBuilder extends StatelessWidget {
       child: Builder(
         builder: (_) {
           if(options.isEmpty){
-            return const ListTile(title: Text('No se encontraron resultados', style: _grey));
+            return SizedBox(
+              width: width,
+              child: const ListTile(title: Text('No se encontraron resultados', style: _grey))
+            );
           }
 
           return SizedBox(

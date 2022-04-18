@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'dart:async';
 
 import '../services/services.dart';
@@ -25,9 +26,9 @@ class PlacesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getSuggestions(String query, String marker) async {
+  Future<void> getSuggestions(String query, String marker, LatLng proximity) async {
     try {
-      final response = await _api.getSuggestions(query);
+      final response = await _api.getSuggestions(query, proximity);
       
       if(marker == 'A'){
         placesA = placesA.dataState(response.suggestions, response.query.join(' '));
@@ -35,6 +36,7 @@ class PlacesProvider extends ChangeNotifier {
         placesB = placesB.dataState(response.suggestions, response.query.join(' '));
       }
     } catch (e) {
+      print('error: $e');
       if(marker == 'A'){
         placesA = placesA.errorState('Error: ${e.toString()}');
       } else {
@@ -45,9 +47,9 @@ class PlacesProvider extends ChangeNotifier {
 
   void addQuery(String query, String marker){
     if(marker == 'A'){
-      placesA = placesA.copyWith(query: query, fetching: false);
+      placesA = placesA.copyWith(query: query, fetching: false, data: false);
     } else {
-      placesB = placesB.copyWith(query: query, fetching: false);
+      placesB = placesB.copyWith(query: query, fetching: false, data: false);
     }
   }
 

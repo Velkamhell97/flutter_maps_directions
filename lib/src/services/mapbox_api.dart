@@ -13,12 +13,14 @@ class MapBoxApi {
   static const _searchApi = '/geocoding/v5/mapbox.places';
   static const _directionsApi = '/directions/v5/mapbox/driving';
 
-  Future<PlacesResponse> getSuggestions(String query) async {
+  Future<PlacesResponse> getSuggestions(String query, LatLng proximity) async {
     print('Searching for: $query....');
 
     final endpoint = Uri.https(_authority, "$_searchApi/$query.json", {
-      'access_token' : _accessToken,
-      'country': 'co'
+      'access_token': _accessToken,
+      'country': 'co',
+      'proximity': proximity.parse(),
+      'limit': '5',
     });
 
     final response = await http.get(endpoint);
@@ -33,7 +35,7 @@ class MapBoxApi {
 
     final endpoint = Uri.https(_authority, "$_directionsApi/$coordinates", {
       'access_token': _accessToken,
-      'geometries':'geojson',
+      'geometries': 'geojson',
     });
 
     final response = await http.get(endpoint);
@@ -41,4 +43,3 @@ class MapBoxApi {
     return DirectionsResponse.fromJson(json.decode(response.body));
   }
 }
-
