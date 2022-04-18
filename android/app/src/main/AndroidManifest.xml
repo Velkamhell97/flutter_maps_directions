@@ -15,7 +15,7 @@
         <!--Put The Private ApiKey-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDtWD9iDXMMKUpwgDOPiXHqCMdoye0Uc2k"/>
+            android:value="API_KEY"/>
 
         <activity
             android:name=".MainActivity"
